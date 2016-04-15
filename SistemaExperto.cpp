@@ -293,32 +293,113 @@ void Lista::buscar(float a){
   p=principio;
   while(p){
     if(p->valor==a){
-
+      encontrado=true;
+      if(principio==p){
+        donde = PRINCIPIO;
+      }else if{
+        donde=FINAL;
+      }else{
+        donde=ENMEDIO;
+      }
+      return;
+    }else if(p->valor<a){
+      anterior=p;
+      p=p->siguiente;
+    }else{
+      encontrado=false;
+      if(principio==p){
+        donde=PRINCIPIO;
+      }else if(p->siguiente==NULL){
+        donde=FINAL;
+      }else{
+        donde=ENMEDIO;
+      }
+      return;
     }
   }
+  encontrado=false;
+  donde=FINAL;
+  lugar_agregado=p;
+}
+void Lista::agregar(caja2* a){
+  caja3 *p;
+  p= new caja3;
+  p->direccion_nodo=a;
+  if(donde==VACIO){
+    principio=p;
+		p->siguiente=NULL;
+		p->anterior=NULL;
+		final=p;
+  }else if(donde==PRINCIPIO){
+		p->siguiente=principio;
+		p->anterior=NULL;
+		principio->anterior=p;
+		principio=p;
+  }else if(donde==FINAL){
+    p->siguiente=NULL;
+    p->anterior=final;
+    final->siguiente=p;
+    final=p;
+  }else{
+    p->siguiente=anterior->siguiente;
+    p->anterior=anterior;
+    anterior->siguiente=p;
+    p->siguiente->anterior=p;
+  }
+  lugar_agregado=p;
+}
+caja2* Lista::sacar(){
+  caja2 *p;
+  caja3 *q;
+  if(!principio)return NULL;
+  q=principio;
+	principio=principio->siguiente;
+  principio->anterior=NULL;
+  p=q->direccion=NULL;
+  delete q;
+  return p;
 }
 class SistemaExperto{
   lista_nodos A;
   Lista B;
   int resultado;
+  string[];
 public:
   SistemaExperto();
   ~SistemaExperto();
   void agregar_nodo(int a,int b,int c);//A=num_nodo,B=bandera,C=tipo
   int es_redundante(caja2 *p);
+  void procesar(caja2* p);
+  void procesarSistema();
+  void hacer_pregunta(caja2* p);
+  void resultado();
 }
-void SistemaExperto::agregar_nodo(a,b,c){
+void SistemaExperto::agregar_nodo(int a,int b,int c,string s){
   caja2 *p;
-  A->buscar(a);
+  A.buscar(a);
   if(A.encontrado==SI)return;
-  p=new caja2;
+  p=A.Lugar_agregado();
   p->num_nodo=a;
   p->bandera=b;
   p->conectivo=c;
   p->cuantos=0;
   p->totales=0;
   p->valor_de_verdad=-1;
+  string[a]=s;
 }
+void SistemaExperto::agregar_salientes(int a,int b, int c){
+  caja1 *p;
+  caja2 *q;
+  A.buscar(a);
+  q=A.Lugar_agregado();
+  (q->salientes).agregar(b);
+  p= (q->salientes).Lugar_agregado();
+  p->valor=c;
+  A.agregar(b);
+  q=A.Lugar_agregado();
+  p->direccion_nodo=q;
+}
+
 int SistemaExperto::es_redundante(caja2 *p){
   caja1 *q;
   p->salientes.iniciar_recorrido();

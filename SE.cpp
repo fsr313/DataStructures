@@ -106,7 +106,7 @@ void Lista_arcos::buscar(int a){
 			}else if(p->siguiente==NULL){
 				donde=FINAL;
 			}else{
-				donde=ENMEDIO; 
+				donde=ENMEDIO;
 			}
 			return;
 		}else if(p->num_nodo<a){
