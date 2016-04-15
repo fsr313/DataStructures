@@ -2,12 +2,14 @@
 #include <string.h>
 using namespace std;
 enum Donde{VACIO,PRINCIPIO,ENMEDIO,FINAL}
+struct caja2;
+
 struct caja1{
   int num_nodo;
   caja2 *direccion_nodo;
   int valor;
   caja1 *siguiente;
-}
+};
 struct caja2{
   int num_nodo;
   int bandera;
@@ -16,11 +18,11 @@ struct caja2{
   int valor_de_verdad;
   ListaArcos salientes;
   caja2 *siguiente;
-}
+};
 struct caja3{
   caja2 *direccion_nodo;
   caja3 *siguiente;
-}
+};
 class ListaArcos{
   caja1 *principio,*anterior,*lugar_agregado;
   bool encontrado;
@@ -37,7 +39,7 @@ public:
   caja1 * Lugar_agregado();
   caja1 * iniciar_recorrido();
   caja1 * recorrer();
-}
+};
 ListaArcos::ListaArcos(){
   principio=NULL;
   anterior=NULL;
@@ -45,7 +47,7 @@ ListaArcos::ListaArcos(){
   encontrado=false;
   donde=VACIO;
 }
-void ListaArcos::ListaArcos(){
+void ListaArcos::nuevo(){
   principio=NULL;
   anterior=NULL;
   lugar_agregado=NULL;
@@ -97,7 +99,7 @@ int ListaArcos::agregar(int a){
   buscar(a);
   if(encontrado==true)return 0;
   p=new caja1;
-  p-<num_nodo = a;
+  p->num_nodo = a;
   if(donde==VACIO){
     p->siguiente=NULL;
     principio=p;
@@ -106,7 +108,7 @@ int ListaArcos::agregar(int a){
     principio=p;
   }else if(donde==FINAL){
     p->siguiente=NULL;
-    anterior->siguiente=p
+    anterior->siguiente=p;
   }else{
     p->siguiente=anterior->siguiente;
     anterior->siguiente=p;
@@ -138,9 +140,8 @@ public:
   void buscar(int n);
   caja2* Lugar_agregado();
   int agregar(int a);
-  void (int a);
   void pintar();
-}
+};
 lista_nodos::lista_nodos(){
   principio=NULL;
   anterior=NULL;
@@ -171,7 +172,7 @@ void lista_nodos::buscar(int a){
       if(principio==p){
         donde=principio;
       }else if(p->siguiente==NULL){
-        donde=FINAl;
+        donde=FINAL;
       }else{
         donde=ENMEDIO;
       }
@@ -184,14 +185,14 @@ void lista_nodos::buscar(int a){
       if(principio==p){
         donde=PRINCIPIO;
       }else if(p->siguiente==NULL){
-        donde=FINAl;
+        donde=FINAL;
       }else{
         donde=ENMEDIO;
       }
       return;
     }
     encontrado=false;
-    donde=final;
+    donde=FINAL;
     lugar_agregado=p;
   }
 }
@@ -200,10 +201,9 @@ int lista_nodos::agregar(int a){
   ListaArcos q;
   buscar(a);
   if(encontrado==true)return(0)
-  P=new caja2;
+  p=new caja2;
   p->num_nodo=a;
   p->bandera=0;
-  p->ruta_corta=0;
   p->anterior=NULL;
   p->salientes.nuevo();
   if(donde==VACIO){
@@ -234,7 +234,7 @@ void lista_nodos::pintar(){
   }
 }
 class Lista{
-  caja3 *principio,*final,*anterior,*lugar_agregado;
+  caja3 *principio,*FINAL,*anterior,*lugar_agregado;
   bool encontrado;
   Donde donde;
 public:
@@ -248,7 +248,7 @@ public:
   caja2* sacar();
   caja3* Lugar_agregado();
   void ajustar(caja3 *p,float a);
-}
+};
 Lista::Lista(){
   principio=NULL;
   final=NULL;
@@ -260,7 +260,7 @@ Lista::Lista(){
 void Lista::nuevo(){
   principio=NULL;
   final=NULL;
-  anterior=NULL;
+  anterior=NULL
   lugar_agregado=NULL;
   encontrado=false;
   donde=VACIO;
@@ -277,7 +277,7 @@ void Lista::terminar(){
   caja3 *p;
   while(principio){
     p=principio;
-    principio=p-siguiente
+    principio=p->siguiente;
     delete p;
   }
 }
@@ -373,7 +373,7 @@ public:
   void procesarSistema();
   void hacer_pregunta(caja2* p);
   void resultado();
-}
+};
 void SistemaExperto::agregar_nodo(int a,int b,int c,string s){
   caja2 *p;
   A.buscar(a);

@@ -142,6 +142,37 @@ void Arbol::borrar1(nodo *p){
     return;
   }
 }
+void Arbol::intercambiar(nodo *p,nodo *q){
+  nodo *r;
+  if(p->padre==q){
+    if(q->h_der==p){
+      FUNCION
+    }else{
+
+    }
+  }else if(q->padre==p){
+    FUNCION
+  }else{
+    r=p->padre;
+    p->padre=q->padre;
+    q->padre=r;
+    r=p->h_der;
+    p->h_der=q->h_der;
+    q->h_der=r;
+    r=p->h_izq;
+    p->h_izq=q->h_izq;
+    q->h_izq=r;
+    if(p->padre==NULL){
+      raiz=p;
+    }else{
+      if(p->padre->h_der==q){
+        p->padre->h_der==p;
+      }else{
+        p->padre->h_izq=q;
+      }
+    }
+  }
+}
 int main(){
   return 1;
 }
