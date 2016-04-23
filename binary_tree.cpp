@@ -1,4 +1,7 @@
 #include <iostream>
+#include <time.h>
+#include <stdlib.h>
+#include <stack>
 using namespace std;
 struct node{
   int value;
@@ -10,11 +13,11 @@ public:
   btree();
   ~btree();
   void insert(int , node *);
-  node * search(int , node *);
+  //node * search(int , node *);
   void destroy(node *);
   void print(node *);
   void erase(node * , int);
-  node * search(int);
+  bool search(int);
   void destroy(){destroy(root);}
   void print(){print(root);}
   void insert(int);
@@ -42,29 +45,60 @@ void btree::insert(int key){
     root->right=NULL;
   }
 }
-node *btree::search(int key){
+bool btree::search(int key){
+  if (root == NULL)
+  return false;
+  stack<node *> nodeStack;
+  nodeStack.push(root);
+  node *leaf;
+  while (nodeStack.empty() == false){
+    // See the top item from stack and check if it is same as x
+    leaf = nodeStack.top();
+    if (node->value == key)
+      return true;
+    nodeStack.pop();
+    // Push right and left children of the popped node to stack
+    if (leaf->right)
+     nodeStack.push(leaf->right);
+    if (leaf->left)
+      nodeStack.push(leaf->left);
+  }
+  return false;
+}
+/*node *btree::search(int key){
   return search(key, root);
-}
-void btree::insert(int key, node *leaf){
-  if(key<leaf->value){
-    if(leaf->left!=NULL)insert(key, leaf->left);
-    else{
-      leaf->left=new node;
-      leaf->left->value=key;
-      leaf->left->left=NULL;
-      leaf->left->right=NULL;
+}*/
+/*void btree::insert(int value){
+  node* q= root;
+  if (!q){
+    q = new node;
+    q->value = value;
+    q->left = q->right = NULL;
+  }
+  else{
+    node * p = q ;
+    for ( ; ; ){
+      while ( value < p->value ){
+        if ( p->left ) p = p->left ;
+        else{
+          p->left = new node ;
+          p->left->value = value ;
+          p->left->left = p->left->right = NULL ;
+          return;
+        }
+      }
+      while ( value > p->value )  {
+        if ( p->right )p = p->right ;
+        else{
+          p->right = new node ;
+          p->right->value = value ;
+          p->right->left = p->right->right = NULL ;
+          return;
+        }
+      }
     }
   }
-  else if(key>=leaf->value){
-    if(leaf->right!=NULL)insert(key, leaf->right);
-    else{
-      leaf->right=new node;
-      leaf->right->value=key;
-      leaf->right->left=NULL;
-      leaf->right->right=NULL;
-    }
-  }
-}
+}*/
 void btree::print(node* leaf){
     if(leaf != NULL){
         if(leaf->left)print(leaf->left);
@@ -73,14 +107,14 @@ void btree::print(node* leaf){
     }
     else return;
 }
-node *btree::search(int key, node *leaf){
+/*node *btree::search(int key, node *leaf){
   if(leaf!=NULL){
     if(key==leaf->value)return leaf;
     if(key<leaf->value)return search(key, leaf->left);
     else return search(key, leaf->right);
   }
   else return NULL;
-}
+}*/
 void btree::erase(node* n, int value){
 	node* father=NULL;
 	node* current=n;
@@ -167,18 +201,17 @@ void btree::erase(node* n, int value){
 	}
 }
 int main(){
+  srand(time(NULL));
   btree * a= new btree;
-  a->insert(3);
   a->insert(2);
   a->insert(4);
-  a->insert(1);
   a->insert(5);
-  a->insert(-1);
+  a->insert(1);
+  a->insert(3);
+  a->insert(9);
   a->insert(0);
+  a->insert(7);
   a->print();
-  cout<<endl;
-  a->erase(3);
-  a->erase(3);
-  a->print();
+  a->destroy();
   return 0;
 }
