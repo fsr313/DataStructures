@@ -16,11 +16,47 @@ public:
   void print();
   void insert(int);
   node *newNode(int);
+  bool erase(int);
 private:
   node *root;
 };
-btree::btree(){
-  root=NULL;
+bool btree::erase(int key){
+  node *current, *target, *previous;
+  current = root;
+  target = NULL;
+  if (current == NULL) return FALSE;
+  while (1){
+    if (current->value == key)
+      target = current;
+    if (key < current->value){
+      if (current->left == NULL)
+        break;
+      previous = current;
+      current = current->left;
+    }else{
+      if (current->right == NULL)
+      break;
+      previous = current;
+      current = current->right;
+    }
+  }
+  if (target == NULL)
+    return FALSE;
+  else{
+  if(previous == NULL){
+    delete current;
+    root = NULL;
+  }
+  else{
+    target->value = current->value;
+    if (previous->left == current)
+      previous->left = current->right;
+    else
+      previous->right = current->left;
+    delete current;
+    }
+  }
+  return TRUE;
 }
 void btree::destroy(node *leaf){
   if (leaf!=NULL){
@@ -94,17 +130,21 @@ void btree::print() {
 }
 int main(){
   btree * a= new btree;
-  a->insert(2);
-  a->insert(4);
-  a->insert(5);
-  a->insert(1);
+  a->insert(8);
   a->insert(3);
-  a->insert(9);
-  a->insert(0);
+  a->insert(1);
+  a->insert(6);
+  a->insert(4);
   a->insert(7);
-  a->insert(7);
+  a->insert(10);
+  a->insert(14);
+  a->insert(13);
+  a->print();
+  cout<<endl;
+  a->erase(10);
   a->print();
   a->destroy();
-  cout<<"Arreglar el search, crear funcion borrar, transformar el destroy a una forma iterativa";
+  cout<<endl;
+  cout<<"Arreglar el search,transformar el destroy a una forma iterativa";
   return 0;
 }
