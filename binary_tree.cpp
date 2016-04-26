@@ -17,6 +17,7 @@ public:
   void insert(int);
   node *newNode(int);
   bool erase(int);
+  void print2();
 private:
   node *root;
 };
@@ -38,7 +39,7 @@ bool btree::erase(int key){
       current = current->left;
     }else{
       if (current->right == NULL)
-      break;
+        break;
       previous = current;
       current = current->right;
     }
@@ -50,13 +51,16 @@ bool btree::erase(int key){
     delete current;
     root = NULL;
   }
-  else{
-    target->value = current->value;
-    if (previous->left == current)
-      previous->left = current->right;
-    else
-      previous->right = current->left;
-    delete current;
+    else{
+      target->value = current->value;
+      if(current->right!=NULL){
+        previous = current;
+        current = current->right;
+        delete previous;
+      }else{
+        delete previous->right;
+        previous->right=NULL;
+      }
     }
   }
   return true;
@@ -146,6 +150,8 @@ int main(){
   cout<<endl;
   a->erase(6);
   a->print();
+  cout<<endl;
+  a->print2();
   a->destroy();
   cout<<endl;
   cout<<"Arreglar el search, transformar el destroy a una forma iterativa";
