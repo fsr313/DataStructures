@@ -8,7 +8,7 @@ struct node{
 };
 class btree{
 public:
-  btree();
+  btree(){root=NULL;}
   ~btree();
   void destroy(node *);
   bool search(int);
@@ -17,13 +17,9 @@ public:
   void insert(int);
   node *newNode(int);
   bool erase(int);
-  void print2();
 private:
   node *root;
 };
-btree::btree(){
-  root=NULL;
-}
 bool btree::erase(int key){
   node *current, *target, *previous;
   current = root;
@@ -46,24 +42,45 @@ bool btree::erase(int key){
   }
   if (target == NULL)
     return false;
-  else{
-  if(previous == NULL){
-    delete current;
-    root = NULL;
-  }
-    else{
-      target->value = current->value;
-      if(current->right!=NULL){
-        previous = current;
-        current = current->right;
-        delete previous;
-      }else{
-        delete previous->right;
-        previous->right=NULL;
+
+  if (!target->left || !target->right) {
+      if(target == root) {
+        root = target->left ? target->left : target->right;
+      } else {
+        if(previous->left == target)
+          previous->left = target->left ? target->left : target->right;
+        else
+          previous->right = target->left ? target->left : target->right;
       }
-    }
+      delete target;
+  } else {
+    swap(current->value, target->value);
+    if(previous->right == current) previous->right = current->right;
+    else previous->left = current->right;
+    delete current;
   }
   return true;
+
+  /*
+  else{
+    if(previous == NULL){
+      delete current;
+      root = NULL;
+    }else if (!target->left || !target->right) {
+      target->value = current->value;
+      if (previous->left == current)
+        previous->left = current->right;
+      else
+        previous->right = current->left;
+      delete current;
+    } else {
+      previous = target->right;
+      while(previous->left) previous = previous->left;
+
+
+    }
+  }
+    */
 }
 void btree::destroy(node *leaf){
   if (leaf!=NULL){
@@ -148,10 +165,9 @@ int main(){
   a->insert(13);
   a->print();
   cout<<endl;
-  a->erase(6);
+  a->erase(14);
   a->print();
   cout<<endl;
-  a->print2();
   a->destroy();
   cout<<endl;
   cout<<"Arreglar el search, transformar el destroy a una forma iterativa";
