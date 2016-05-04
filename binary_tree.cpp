@@ -8,17 +8,16 @@ struct node{
 class btree{
 public:
   btree(){root=NULL;}
-  ~btree();
-  void destroy(node *);
+  ~btree(){destroy();}
+  void destroy();
   bool search(int);
-  void destroy(){destroy(root);}
   void print();
   void insert(int);
   node *newNode(int);
   bool erase(int);
-  node *root;
 private:
   node *start,*last;
+  node *root;
 };
 bool btree::erase(int key){
   node *current, *target, *previous;
@@ -55,6 +54,10 @@ bool btree::erase(int key){
     if (start == target) {
       start = start->next;
       start->previous = NULL;
+    }
+    else if(last == target){
+      last = last->previous;
+      last->next=NULL;
     }else{
       target->previous->next=target->next;
       target->next->previous=target->previous;
@@ -68,11 +71,13 @@ bool btree::erase(int key){
   }
   return true;
 }
-void btree::destroy(node *leaf){
-  if (leaf!=NULL){
-    destroy(leaf->left);
-    destroy(leaf->right);
-    delete leaf;
+void btree::destroy(){
+  node *current=start;
+  node *target;
+  while(current){
+    target=current;
+    current=current->next;
+    delete target;
   }
 }
 node* btree::newNode(int key){
@@ -84,7 +89,6 @@ node* btree::newNode(int key){
   leaf->previous=NULL;
 }
 void btree::insert(int key){
-  cout<<key<<endl;
   node *leaf,*father;
   bool lado;
   leaf = root;
@@ -106,7 +110,6 @@ void btree::insert(int key){
     }
   }
   leaf=newNode(key);
-  cout<<"hola1";
   if(lado){
     father->right=leaf;
     leaf->previous=father;
@@ -123,39 +126,26 @@ void btree::insert(int key){
     else start = leaf;
     father->previous=leaf;
   }
-  cout<<"hola";
 }
-bool btree::search(int key){
-  if (root == NULL)
-  return false;
-  stack<node *> nodeStack;
-  nodeStack.push(root);
-  node *leaf;
-  while (nodeStack.empty() == false){
-    leaf = nodeStack.top();
-    if(leaf->value == key)
-      return true;
-    nodeStack.pop();
-    if(leaf->right)
-     nodeStack.push(leaf->right);
-    if(leaf->left)
-      nodeStack.push(leaf->left);
-  }
-  return false;
+bool btree::search(int key) {
+  node *n = root;
+  node *father = NULL;
+  while (n)
+      if( n->value < key ){
+        father = n;
+        n = n->right;
+      }
+      else if( n->value > key ){
+        father = n; n = n->left;
+      }
+      else return true;
+  return NULL;
 }
 void btree::print() {
-  stack<node*> s;
-  node *current = root;
-  while (!s.empty() || current) {
-    if (current) {
-      s.push(current);
-      current = current->left;
-    } else {
-      current = s.top();
-      s.pop();
-      cout << current->value << " ";
-      current = current->right;
-    }
+  node *current=start;
+  while(current){
+    cout<<current->value<<"  ";
+    current=current->next;
   }
 }
 int main(){
@@ -171,19 +161,12 @@ int main(){
   a->insert(13);
   a->print();
   cout<<endl;
-  a->erase(8);
+  a->erase(1);
   a->print();
   cout<<endl;
-  cout<<a->root->value;
   cout<<endl;
   a->erase(10);
   cout<<endl;
-  cout<<a->root->value;
-  cout<<endl;
   a->print();
-  cout<<endl;
-  a->destroy();
-  cout<<endl;
-  cout<<"Arreglar el search, transformar el destroy a una forma iterativa";
   return 0;
 }
