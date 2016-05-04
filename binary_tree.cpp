@@ -3,8 +3,7 @@
 using namespace std;
 struct node{
   int value;
-  node *left;
-  node *right;
+  node *left,*right,*previous,*next;
 };
 class btree{
 public:
@@ -17,8 +16,9 @@ public:
   void insert(int);
   node *newNode(int);
   bool erase(int);
-private:
   node *root;
+private:
+  node *start,*last;
 };
 bool btree::erase(int key){
   node *current, *target, *previous;
@@ -52,35 +52,21 @@ bool btree::erase(int key){
         else
           previous->right = target->left ? target->left : target->right;
       }
-      delete target;
-  } else {
+    if (start == target) {
+      start = start->next;
+      start->previous = NULL;
+    }else{
+      target->previous->next=target->next;
+      target->next->previous=target->previous;
+    }
+    delete target;
+  }else{
     swap(current->value, target->value);
     if(previous->right == current) previous->right = current->right;
     else previous->left = current->right;
     delete current;
   }
   return true;
-
-  /*
-  else{
-    if(previous == NULL){
-      delete current;
-      root = NULL;
-    }else if (!target->left || !target->right) {
-      target->value = current->value;
-      if (previous->left == current)
-        previous->left = current->right;
-      else
-        previous->right = current->left;
-      delete current;
-    } else {
-      previous = target->right;
-      while(previous->left) previous = previous->left;
-
-
-    }
-  }
-    */
 }
 void btree::destroy(node *leaf){
   if (leaf!=NULL){
@@ -94,13 +80,17 @@ node* btree::newNode(int key){
   leaf->value=key;
   leaf->left=NULL;
   leaf->right=NULL;
+  leaf->next=NULL;
+  leaf->previous=NULL;
 }
 void btree::insert(int key){
+  cout<<key<<endl;
   node *leaf,*father;
   bool lado;
   leaf = root;
   if(leaf==NULL){
     root=newNode(key);
+    start=root;
     return;
   }
   while(leaf!=NULL){
@@ -116,8 +106,24 @@ void btree::insert(int key){
     }
   }
   leaf=newNode(key);
-  if(lado)father->right=leaf;
-  else father->left=leaf;
+  cout<<"hola1";
+  if(lado){
+    father->right=leaf;
+    leaf->previous=father;
+    leaf->next=father->next;
+    if(leaf->next)leaf->next->previous=leaf;
+    else last=leaf;
+    father->next=leaf;
+  }
+  else{
+    father->left=leaf;
+    leaf->previous=father->previous;
+    leaf->next=father;
+    if(leaf->previous)father->previous->next=leaf;
+    else start = leaf;
+    father->previous=leaf;
+  }
+  cout<<"hola";
 }
 bool btree::search(int key){
   if (root == NULL)
@@ -165,7 +171,15 @@ int main(){
   a->insert(13);
   a->print();
   cout<<endl;
-  a->erase(14);
+  a->erase(8);
+  a->print();
+  cout<<endl;
+  cout<<a->root->value;
+  cout<<endl;
+  a->erase(10);
+  cout<<endl;
+  cout<<a->root->value;
+  cout<<endl;
   a->print();
   cout<<endl;
   a->destroy();
