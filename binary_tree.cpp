@@ -1,5 +1,4 @@
 #include <iostream>
-#include <stack>
 using namespace std;
 struct node{
   int value;
